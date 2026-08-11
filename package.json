@@ -9,7 +9,7 @@
   "engines": { "node": ">=20.9.0" },
   "pnpm": {
     "overrides": {
-      "@modelcontextprotocol/sdk": "1.26.0"
+      "@modelcontextprotocol/sdk": "1.30.0"
     }
   },
   "scripts": {
@@ -26,6 +26,6 @@
     "eslint": "9.32.0",
     "typescript": "5.9.2",
     "typescript-eslint": "8.39.0",
-    "vitest": "3.2.4"
+    "vitest": "4.1.10"
   }
 }

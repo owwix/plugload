@@ -80,9 +80,9 @@ The full working configuration is in `examples/payload-app/src/payload.config.ts
 
 ## Compatibility
 
-Plugload requires Payload's extensible official MCP plugin, introduced in Payload 3.83. It declares peer support for Payload 3.83 through 4.x; the example is pinned to Payload and `@payloadcms/*` 3.84.1.
+Plugload requires Payload's extensible official MCP plugin, introduced in Payload 3.83. It declares peer support for Payload 3.83 through 4.x; the example is pinned to Payload and `@payloadcms/*` 3.87.1.
 
-Payload requires every `payload` and `@payloadcms/*` package in one installation to use exactly the same version and resolve only once. Pin those packages without `^` or `~`. Payload 3.84.1 requires Next `>=15.4.11 <15.5.0` (or another range declared by its peer metadata) and its MCP handler requires MCP SDK 1.26.0. The example pins Next 15.4.11, React/React DOM 19.1.1, and MCP SDK 1.26.0. Plugload itself requires Node.js 20.9 or newer.
+Payload requires every `payload` and `@payloadcms/*` package in one installation to use exactly the same version and resolve only once. Pin those packages without `^` or `~`. Payload 3.87.1 supports Next `>=16.2.6 <17.0.0` (along with documented 15.x ranges) and its official MCP plugin uses MCP SDK 1.30.0. The example pins Next 16.3.0, React/React DOM 19.2.8, and MCP SDK 1.30.0. Plugload itself requires Node.js 20.9 or newer.
 
 Payload 4 was still canary at the time this baseline was created. Test it in a non-production environment before adopting it, and update every Payload package together.
 
