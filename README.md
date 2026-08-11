@@ -17,9 +17,9 @@ Plugload is a safe, schema-aware content operations layer for AI agents working 
 
 ## Safety model
 
-All writes begin with a stored operation plan containing the current value, proposed value, exact field-level diff, environment, risk, and baseline hash. Publishing, deletion, rollback, promotion, bulk changes, and all production writes require a separate approval receipt. Apply re-reads the content and refuses to overwrite changes made since preview.
+All writes begin with a stored operation plan containing the current value, proposed value, exact field-level diff, environment, risk, baseline hash, schema hash, and integrity digest. Publishing, deletion, rollback, promotion, bulk changes, and all production writes require a cryptographically bound, one-time approval from a different authenticated Payload user. Apply re-reads the content and schema, claims the plan atomically, and refuses stale or repeated mutation.
 
-Payload content calls always pass the authenticated MCP request and `overrideAccess: false`. The `overrideAuth` wrapper shown below attaches the already-authenticated API-key owner to custom-tool requests. Plugload's own hidden plan and audit collections use internal writes so failed and successful agent actions remain traceable; their public access remains locked down.
+Payload content calls always pass the authenticated MCP request and `overrideAccess: false`. Explicit Plugload allowlists must match the slugs enabled in Payload MCP. The `overrideAuth` wrapper shown below attaches the already-authenticated API-key owner to custom-tool requests. Plugload's own hidden plan and audit collections use internal writes; audit events form a verifiable SHA-256 hash chain.
 
 ## Quick start
 
@@ -68,7 +68,14 @@ export default buildConfig({
       },
       collections: { posts: { enabled: { find: true, create: true, update: true } } },
       mcp: {
-        tools: createPlugloadMcpTools({ environment, projectName: 'client-site' }),
+        tools: createPlugloadMcpTools({
+          environment,
+          projectName: 'client-site',
+          collections: ['posts'],
+          globals: ['site-settings'],
+          approvalSigningSecret: process.env.PLUGLOAD_APPROVAL_SIGNING_SECRET,
+          canApprove: ({ req }) => req.user?.role === 'publisher',
+        }),
         resources: createPlugloadMcpResources({ environment, projectName: 'client-site' }),
       },
     }),

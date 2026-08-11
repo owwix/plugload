@@ -56,9 +56,9 @@ server.registerTool('plugload_content_read', {
 
 const forwarded: Array<[string, string, string, Record<string, z.ZodTypeAny>]> = [
   ['plugload_operation_plan', 'plugload_plan_operation', 'Preview a schema-aware operation and exact before/after diff without changing content.', { project: z.string().optional(), request: z.record(z.any()) }],
-  ['plugload_operation_approve', 'plugload_approve_operation', 'Record explicit approval for a reviewed operation plan.', { project: z.string().optional(), planId: z.string(), approvedBy: z.string(), confirmation: z.string() }],
   ['plugload_operation_apply', 'plugload_apply_operation', 'Apply a reviewed plan through the Payload-hosted safety adapter.', { project: z.string().optional(), planId: z.string(), actor: z.string(), approvalId: z.string().optional() }],
   ['plugload_audit_recent', 'plugload_audit_recent', 'Read recent content-operation audit events.', { project: z.string().optional(), limit: z.number().int().min(1).max(200).default(50) }],
+  ['plugload_audit_verify', 'plugload_audit_verify', 'Verify the tamper-evident audit hash chain.', { project: z.string().optional(), limit: z.number().int().min(1).max(10_000).default(10_000) }],
 ]
 
 for (const [localName, upstreamName, description, inputSchema] of forwarded) {

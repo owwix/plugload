@@ -10,6 +10,8 @@ export interface ProjectConfig {
   token?: string
   tokenEnv?: string
   tokenFile?: string
+  approvalTokenEnv?: string
+  approvalTokenFile?: string
   default?: boolean
 }
 
@@ -37,13 +39,15 @@ export function selectProject(config: PlugloadConfig, name?: string): ProjectCon
   return project
 }
 
-export function projectToken(project: ProjectConfig): string {
+export function projectToken(project: ProjectConfig, approval = false): string {
   let fileToken: string | undefined
-  if (project.tokenFile) {
-    try { fileToken = readFileSync(resolve(project.tokenFile), 'utf8').trim() }
+  const tokenFile = approval ? project.approvalTokenFile : project.tokenFile
+  const tokenEnv = approval ? project.approvalTokenEnv : project.tokenEnv
+  if (tokenFile) {
+    try { fileToken = readFileSync(resolve(tokenFile), 'utf8').trim() }
     catch { fileToken = undefined }
   }
-  const token = project.token ?? (project.tokenEnv ? process.env[project.tokenEnv] : undefined) ?? fileToken
-  if (!token) throw new PlugloadError(`No API token is available for ${project.name}.`, 'TOKEN_MISSING', `Set ${project.tokenEnv ?? 'tokenEnv'} or provide a protected tokenFile. Never commit API keys to plugload.config.json.`)
+  const token = approval ? (tokenEnv ? process.env[tokenEnv] : undefined) ?? fileToken : project.token ?? (tokenEnv ? process.env[tokenEnv] : undefined) ?? fileToken
+  if (!token) throw new PlugloadError(`No ${approval ? 'approval ' : ''}API token is available for ${project.name}.`, 'TOKEN_MISSING', `Set ${tokenEnv ?? (approval ? 'approvalTokenEnv' : 'tokenEnv')} or provide a protected tokenFile. Never commit API keys to plugload.config.json.`)
   return token
 }

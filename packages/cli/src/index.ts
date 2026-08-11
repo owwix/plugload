@@ -29,15 +29,18 @@ async function main() {
     const limit = typeof flags.limit === 'string' ? Number.parseInt(flags.limit, 10) : 20
     return withPayloadClient(project, async (client) => output(resultValue(await client.callTool({ name: 'plugload_audit_recent', arguments: { limit } }))))
   }
+  if (command === 'audit' && subcommand === 'verify') {
+    const limit = typeof flags.limit === 'string' ? Number.parseInt(flags.limit, 10) : 10_000
+    return withPayloadClient(project, async (client) => output(resultValue(await client.callTool({ name: 'plugload_audit_verify', arguments: { limit } }))))
+  }
   if (command === 'preview' && subcommand === 'operation') {
     const request = await readJsonFlag(flags.file, 'preview operation requires --file <request.json>')
     return withPayloadClient(project, async (client) => output(resultValue(await client.callTool({ name: 'plugload_plan_operation', arguments: request as Record<string, unknown> }))))
   }
   if (command === 'approve' && subcommand === 'operation') {
     requireString(flags.plan, '--plan is required')
-    requireString(flags.by, '--by is required')
     requireString(flags.confirm, '--confirm is required')
-    return withPayloadClient(project, async (client) => output(resultValue(await client.callTool({ name: 'plugload_approve_operation', arguments: { planId: flags.plan, approvedBy: flags.by, confirmation: flags.confirm } }))))
+    return withPayloadClient(project, async (client) => output(resultValue(await client.callTool({ name: 'plugload_approve_operation', arguments: { planId: flags.plan, confirmation: flags.confirm } }))), { approval: true })
   }
   if (command === 'apply' && subcommand === 'operation') {
     requireString(flags.plan, '--plan is required')
@@ -66,7 +69,7 @@ async function readJsonFlag(value: string | boolean | undefined, error: string):
 function requireString(value: unknown, message: string): asserts value is string { if (typeof value !== 'string') throw new Error(message) }
 function output(value: unknown) { process.stdout.write(`${JSON.stringify(value, null, 2)}\n`) }
 function printHelp() {
-  process.stdout.write(`plugload <command>\n\n  config validate [--config path]\n  connection test [--project name]\n  schema inspect [--project name]\n  audit recent [--limit 20] [--project name]\n  preview operation --file request.json [--project name]\n  approve operation --plan id --by person --confirm "APPROVE <id>"\n  apply operation --plan id --actor name [--approval id]\n\nUse action "promote" in an operation file after reading the source project; the selected --project is always the destination.\n`)
+  process.stdout.write(`plugload <command>\n\n  config validate [--config path]\n  connection test [--project name]\n  schema inspect [--project name]\n  audit recent [--limit 20] [--project name]\n  audit verify [--limit 10000] [--project name]\n  preview operation --file request.json [--project name]\n  approve operation --plan id --confirm "APPROVE <id> <digest-prefix>"\n  apply operation --plan id --actor name [--approval id]\n\nApproval uses the project's separate approvalTokenEnv or approvalTokenFile credential.\n`)
 }
 
 main().catch((error) => { output(asHumanError(error).toJSON()); process.exitCode = 1 })

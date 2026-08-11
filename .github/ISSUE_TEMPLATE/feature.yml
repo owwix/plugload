@@ -1,0 +1,25 @@
+name: Feature request
+description: Propose a focused Plugload improvement.
+title: "feat: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: Content-operations need
+      description: What workflow or safety problem should be solved?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: safety
+    attributes:
+      label: Safety and compatibility impact
+      description: Consider access control, approvals, audit, schemas, and Payload versions.
+    validations:
+      required: true

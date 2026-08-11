@@ -8,9 +8,14 @@
   "main": "./dist/index.js",
   "bin": { "plugload": "./dist/index.js" },
   "files": ["dist"],
+  "engines": { "node": ">=20.9.0" },
+  "publishConfig": { "access": "public", "provenance": true },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "clean": "rm -rf dist",
+    "build": "pnpm clean && tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepack": "cp ../../LICENSE LICENSE",
+    "postpack": "rm -f LICENSE"
   },
   "dependencies": {
     "@plugload/core": "workspace:*",
