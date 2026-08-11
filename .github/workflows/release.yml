@@ -20,9 +20,14 @@ jobs:
           version: 10.33.1
       - uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24.18.0
           registry-url: https://registry.npmjs.org
-          cache: pnpm
+          package-manager-cache: false
+      - name: Use the trusted-publishing npm version
+        run: |
+          npm install --global npm@11.6.2
+          test "$(node --version)" = "v24.18.0"
+          test "$(npm --version)" = "11.6.2"
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
       - run: pnpm --filter @plugload/example-payload-app build
