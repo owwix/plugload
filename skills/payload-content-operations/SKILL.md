@@ -16,13 +16,14 @@ Use Plugload as the safety and workflow layer. Use Payload's official MCP tools 
 5. For a change, call `plugload_operation_plan` with one focused request and a concrete reason.
 6. Present the plan summary and field-level `diff` to the user. Clearly name the project and environment.
 7. If `approvalRequired` is true, stop before applying. Ask for explicit approval of that plan ID.
-8. After the user approves, call `plugload_operation_approve` with the exact confirmation `APPROVE <planId>`.
-9. Call `plugload_operation_apply` with the returned approval ID when required.
+8. Do not approve the operation yourself. Ask a separately authenticated approver to run `plugload approve operation` outside the agent runtime using the exact `approvalConfirmation` returned by the plan.
+9. Continue only after the approver provides the resulting approval ID. Call `plugload_operation_apply` with it.
 10. Report the result and audit identifier. Re-read consequential content to verify it.
 
 ## Hard safety rules
 
 - Never publish, delete, bulk-edit, roll back, promote, or change production content without explicit approval.
+- Never request, read, store, or use the separate approver credential. It must not be available to the agent process.
 - Never treat a general request such as “make it live” as approval for a plan the user has not seen.
 - Never bypass Payload access controls or ask for broader credentials merely to make an operation succeed.
 - Never apply a stale or expired plan. Create a new preview and show the new diff.

@@ -16,6 +16,8 @@ Include the affected version or commit, configuration, impact, reproduction step
 - Never store tokens in tracked configuration or audit payloads.
 - Keep Payload access rules enabled; Plugload must not be used to bypass them.
 - Require a separate approval for production writes, publication, deletion, bulk edits, rollback, and promotion.
+- Keep the approver API key outside every agent runtime; use a different Payload user and trusted session.
+- Configure explicit Plugload collection/global allowlists matching the official Payload MCP exposure.
 - Back up content and audit data before production use.
 
 See [docs/threat-model.md](docs/threat-model.md) for trust boundaries and known limitations.

@@ -13,4 +13,6 @@ audit.jsonl
 plugload.config.json
 payload-types.ts
 .local-mcp-token
+.local-approver-token
 .local-admin.json
+.local-approver.json

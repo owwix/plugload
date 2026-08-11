@@ -51,10 +51,15 @@ export interface OperationPlan {
   after: JsonValue | undefined
   diff: DiffEntry[]
   baselineHash: string
+  schemaHash?: string
   approvalRequired: boolean
   approvalReasons: string[]
   risk: 'low' | 'medium' | 'high' | 'critical'
   summary: string
+  digest: string
+  state: 'pending' | 'applying' | 'applied' | 'failed'
+  appliedAt?: string
+  result?: JsonValue
 }
 
 export interface ApprovalReceipt {
@@ -64,6 +69,11 @@ export interface ApprovalReceipt {
   approvedAt: string
   expiresAt: string
   confirmation: string
+  planDigest: string
+  environment: EnvironmentKind
+  action: OperationAction
+  signature: string
+  consumedAt?: string
 }
 
 export interface AuditEvent {
@@ -71,13 +81,15 @@ export interface AuditEvent {
   timestamp: string
   actor: string
   action: string
-  status: 'planned' | 'approved' | 'succeeded' | 'rejected' | 'failed'
+  status: 'planned' | 'approved' | 'executing' | 'succeeded' | 'rejected' | 'failed' | 'replayed'
   environment: EnvironmentKind
   target: ContentTarget
   planId?: string
   approvalId?: string
   reason?: string
   detail?: JsonObject
+  previousHash?: string
+  integrityHash?: string
 }
 
 export interface FieldSchema {
@@ -92,6 +104,10 @@ export interface FieldSchema {
   options?: JsonValue
   validation: string[]
   fields?: FieldSchema[]
+  blocks?: Array<{ slug: string; fields: FieldSchema[] }>
+  hasMany: boolean
+  hidden: boolean
+  access: Record<string, 'allowed' | 'denied' | 'dynamic' | 'unspecified'>
 }
 
 export interface ContentTypeSchema {
@@ -121,6 +137,7 @@ export interface ContentAdapter {
   preview?(request: OperationRequest, before: JsonValue | undefined): Promise<JsonValue | undefined>
   validate(target: ContentTarget, value: JsonValue | undefined, action: OperationAction): Promise<void>
   execute(plan: OperationPlan): Promise<JsonValue | undefined>
+  schemaFingerprint?(target: ContentTarget): Promise<string>
 }
 
 export interface AuditSink {
@@ -133,4 +150,8 @@ export interface OperationStore {
   getPlan(id: string): Promise<OperationPlan | undefined>
   saveApproval(approval: ApprovalReceipt): Promise<void>
   getApproval(id: string): Promise<ApprovalReceipt | undefined>
+  consumeApproval(id: string, planId: string, planDigest: string, consumedAt: string): Promise<ApprovalReceipt | undefined>
+  claimPlan(id: string, digest: string): Promise<'claimed' | 'applied' | 'busy' | 'missing'>
+  completePlan(id: string, digest: string, result: JsonValue | undefined, appliedAt: string): Promise<void>
+  failPlan(id: string, digest: string): Promise<void>
 }

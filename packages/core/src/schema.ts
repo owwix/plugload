@@ -21,11 +21,14 @@ export function normalizeFields(fields: UnknownRecord[] = []): FieldSchema[] {
     if (field.max !== undefined) validation.push(`max:${field.max}`)
     if (field.minLength !== undefined) validation.push(`minLength:${field.minLength}`)
     if (field.maxLength !== undefined) validation.push(`maxLength:${field.maxLength}`)
+    if (field.minRows !== undefined) validation.push(`minRows:${field.minRows}`)
+    if (field.maxRows !== undefined) validation.push(`maxRows:${field.maxRows}`)
     if (typeof field.validate === 'function') validation.push('custom')
     const relationTo = typeof field.relationTo === 'string'
       ? [field.relationTo]
       : Array.isArray(field.relationTo) ? field.relationTo.filter((item): item is string => typeof item === 'string') : undefined
     const nested = Array.isArray(field.fields) ? normalizeFields(field.fields) : undefined
+    const blocks = Array.isArray(field.blocks) ? field.blocks.map((block: UnknownRecord) => ({ slug: String(block.slug), fields: normalizeFields(block.fields) })) : undefined
     return {
       name: fieldName(field, index),
       type: String(field.type ?? 'unknown'),
@@ -34,10 +37,14 @@ export function normalizeFields(fields: UnknownRecord[] = []): FieldSchema[] {
       localized: Boolean(field.localized),
       unique: Boolean(field.unique),
       virtual: Boolean(field.virtual),
+      hasMany: Boolean(field.hasMany),
+      hidden: Boolean(field.hidden || field.admin?.hidden),
+      access: Object.fromEntries(['read', 'create', 'update'].map((key) => [key, accessState(field.access?.[key])])),
       ...(relationTo?.length ? { relationTo } : {}),
       ...(field.options !== undefined ? { options: sanitizeValue(field.options) } : {}),
       validation,
       ...(nested?.length ? { fields: nested } : {}),
+      ...(blocks?.length ? { blocks } : {}),
     }
   })
 }

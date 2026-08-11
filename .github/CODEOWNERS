@@ -1,0 +1,11 @@
+* @owwix
+
+# Safety boundaries require explicit owner review.
+/packages/core/src/engine.ts @owwix
+/packages/core/src/audit.ts @owwix
+/packages/mcp/src/host-tools.ts @owwix
+/packages/mcp/src/payload-adapter.ts @owwix
+/packages/mcp/src/payload-persistence.ts @owwix
+/.github/workflows/ @owwix
+/SECURITY.md @owwix
+/docs/threat-model.md @owwix

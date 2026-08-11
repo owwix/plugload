@@ -51,7 +51,14 @@ const SiteSettings: GlobalConfig = {
 }
 
 const environment = (process.env.PLUGLOAD_ENVIRONMENT ?? 'development') as 'development' | 'preview' | 'staging' | 'production'
-const plugloadTools = createPlugloadMcpTools({ environment, projectName: 'example' })
+const plugloadTools = createPlugloadMcpTools({
+  environment,
+  projectName: 'example',
+  collections: ['posts', 'categories'],
+  globals: ['site-settings'],
+  ...(process.env.PLUGLOAD_APPROVAL_SIGNING_SECRET ? { approvalSigningSecret: process.env.PLUGLOAD_APPROVAL_SIGNING_SECRET } : {}),
+  canApprove: ({ req }) => ['publisher', 'admin'].includes(String(req.user?.role)),
+})
 const plugloadResources = createPlugloadMcpResources({ environment, projectName: 'example' })
 
 export default buildConfig({

@@ -3,9 +3,9 @@ import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/
 import { asHumanError } from '@plugload/core'
 import { projectToken, type ProjectConfig } from './config.js'
 
-export async function withPayloadClient<T>(project: ProjectConfig, operation: (client: Client) => Promise<T>): Promise<T> {
+export async function withPayloadClient<T>(project: ProjectConfig, operation: (client: Client) => Promise<T>, options: { approval?: boolean } = {}): Promise<T> {
   const client = new Client({ name: 'plugload', version: '0.1.0' })
-  const transport = new StreamableHTTPClientTransport(new URL(project.url), { requestInit: { headers: { Authorization: `Bearer ${projectToken(project)}` } } })
+  const transport = new StreamableHTTPClientTransport(new URL(project.url), { requestInit: { headers: { Authorization: `Bearer ${projectToken(project, options.approval)}` } } })
   try { await client.connect(transport as any); return await operation(client) }
   catch (error) { throw asHumanError(error) }
   finally { await client.close().catch(() => undefined) }

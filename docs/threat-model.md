@@ -22,10 +22,10 @@ Plugload does not make an untrusted model a trusted administrator. A deployment 
 | Prompt injection requests unsafe tools | Minimal tool exposure, schema validation, stored previews, approval gates | An authorized operator can still approve a harmful plan |
 | Payload authorization bypass | `overrideAccess: false`, authenticated request propagation, least-privilege API keys | Incorrect Payload access rules remain dangerous |
 | Stale or conflicting update | Baseline hash and re-read immediately before apply | External side effects in hooks may not be reversible |
-| Approval replay or plan substitution | Approval binds to plan ID, digest, action, project, and environment | Weak external approver identity undermines the guarantee |
+| Approval replay or plan substitution | Separate Payload identity, signed plan digest, atomic one-time consumption, action and environment binding | Exposing the approver credential to an agent destroys the boundary |
 | Cross-client or production confusion | Named project/environment config, production write approval, per-environment credentials | Mislabelled configuration can direct work incorrectly |
 | Secret disclosure | Environment or token-file references, ignored local config, redacted errors | Host logs or third-party transports may leak secrets |
-| Audit tampering or loss | Append-only audit contract and Payload-backed persistence | Database administrators can modify records; export to immutable storage for stronger guarantees |
+| Audit tampering or loss | Append-only audit contract, SHA-256 hash chain, and Payload-backed persistence | Database administrators can rewrite a complete chain; export anchors to immutable storage for stronger guarantees |
 | Destructive or high-volume mutation | Explicit gates for delete, publish, rollback, promotion, bulk, and production actions | A compromised approver may authorize damage |
 | Schema drift | Live schema inspection and validation before planning/apply | Custom hooks and external systems may impose undiscoverable constraints |
 | Denial of service | Bounded tool inputs and server-side access controls | Rate limiting and infrastructure protection are deployment responsibilities |
@@ -34,6 +34,8 @@ Plugload does not make an untrusted model a trusted administrator. A deployment 
 
 - Content operations never set `overrideAccess: true`.
 - A consequential operation cannot be applied without a valid, matching approval.
+- The planning actor cannot approve its own plan, and the agent bridge does not expose approval.
+- Every target slug must be explicitly allowlisted in Plugload as well as enabled in Payload MCP.
 - Apply refuses a plan when the current baseline differs from its preview.
 - Project, environment, actor, target, result, and correlation data are recorded for every attempt.
 - Secrets are not accepted as ordinary tracked configuration values or written to audit details.

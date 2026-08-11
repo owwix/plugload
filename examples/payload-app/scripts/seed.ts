@@ -6,21 +6,30 @@ import config from '../src/payload.config.js'
 
 const root = resolve(import.meta.dirname, '..')
 const tokenPath = resolve(root, '.local-mcp-token')
+const approverTokenPath = resolve(root, '.local-approver-token')
 const adminPath = resolve(root, '.local-admin.json')
+const approverPath = resolve(root, '.local-approver.json')
 
 async function existingSecret(path: string): Promise<string | undefined> {
   try { return (await readFile(path, 'utf8')).trim() || undefined } catch { return undefined }
 }
 
 const payload = await getPayload({ config })
-const email = 'admin@plugload.local'
+const email = 'agent@plugload.local'
+const approverEmail = 'approver@plugload.local'
 const storedAdmin = await existingSecret(adminPath)
+const storedApprover = await existingSecret(approverPath)
 const storedToken = await existingSecret(tokenPath)
+const storedApproverToken = await existingSecret(approverTokenPath)
 const password = storedAdmin ? JSON.parse(storedAdmin).password : randomBytes(24).toString('base64url')
+const approverPassword = storedApprover ? JSON.parse(storedApprover).password : randomBytes(24).toString('base64url')
 const apiKey = storedToken ?? randomBytes(32).toString('base64url')
+const approverApiKey = storedApproverToken ?? randomBytes(32).toString('base64url')
 
 const users = await payload.find({ collection: 'users', where: { email: { equals: email } }, limit: 1, overrideAccess: true })
-const user = users.docs[0] ?? await payload.create({ collection: 'users', data: { email, password, role: 'admin' }, overrideAccess: true })
+const user = users.docs[0] ?? await payload.create({ collection: 'users', data: { email, password, role: 'editor' }, overrideAccess: true })
+const approvers = await payload.find({ collection: 'users', where: { email: { equals: approverEmail } }, limit: 1, overrideAccess: true })
+const approver = approvers.docs[0] ?? await payload.create({ collection: 'users', data: { email: approverEmail, password: approverPassword, role: 'publisher' }, overrideAccess: true })
 
 const keyData = {
   user: user.id,
@@ -34,9 +43,27 @@ const keyData = {
   'payload-mcp-tool': {
     plugloadInspectSchema: true,
     plugloadPlanOperation: true,
-    plugloadApproveOperation: true,
+    plugloadApproveOperation: false,
     plugloadApplyOperation: true,
     plugloadAuditRecent: true,
+    plugloadAuditVerify: true,
+  },
+  'payload-mcp-resource': { plugloadSafetyPolicy: true },
+}
+
+const approverKeyData = {
+  user: approver.id,
+  label: 'Plugload local approver',
+  description: 'Independent local approval key. Do not expose this credential to the agent connection.',
+  enableAPIKey: true,
+  apiKey: approverApiKey,
+  'payload-mcp-tool': {
+    plugloadInspectSchema: false,
+    plugloadPlanOperation: false,
+    plugloadApproveOperation: true,
+    plugloadApplyOperation: false,
+    plugloadAuditRecent: true,
+    plugloadAuditVerify: true,
   },
   'payload-mcp-resource': { plugloadSafetyPolicy: true },
 }
@@ -44,11 +71,18 @@ const keyData = {
 const keys = await payload.find({ collection: 'payload-mcp-api-keys', where: { label: { equals: keyData.label } }, limit: 1, overrideAccess: true })
 if (keys.docs[0]) await payload.update({ collection: 'payload-mcp-api-keys', id: keys.docs[0].id, data: keyData, overrideAccess: true })
 else await payload.create({ collection: 'payload-mcp-api-keys', data: keyData, overrideAccess: true })
+const approverKeys = await payload.find({ collection: 'payload-mcp-api-keys', where: { label: { equals: approverKeyData.label } }, limit: 1, overrideAccess: true })
+if (approverKeys.docs[0]) await payload.update({ collection: 'payload-mcp-api-keys', id: approverKeys.docs[0].id, data: approverKeyData, overrideAccess: true })
+else await payload.create({ collection: 'payload-mcp-api-keys', data: approverKeyData, overrideAccess: true })
 
 await writeFile(tokenPath, `${apiKey}\n`, { mode: 0o600 })
 await writeFile(adminPath, `${JSON.stringify({ email, password }, null, 2)}\n`, { mode: 0o600 })
+await writeFile(approverTokenPath, `${approverApiKey}\n`, { mode: 0o600 })
+await writeFile(approverPath, `${JSON.stringify({ email: approverEmail, password: approverPassword }, null, 2)}\n`, { mode: 0o600 })
 await chmod(tokenPath, 0o600)
 await chmod(adminPath, 0o600)
+await chmod(approverTokenPath, 0o600)
+await chmod(approverPath, 0o600)
 await payload.destroy()
 
-process.stdout.write('Local Payload user and MCP key are ready. Credentials were saved to ignored mode-600 files.\n')
+process.stdout.write('Separate local agent and approver users are ready. Credentials were saved to ignored mode-600 files.\n')
