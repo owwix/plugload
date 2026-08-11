@@ -1,6 +1,6 @@
 {
   "name": "@plugload/core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Schema-aware planning, approvals, diffs, workflows, and audit contracts for Plugload",
   "license": "Apache-2.0",
   "repository": { "type": "git", "url": "https://github.com/owwix/plugload.git", "directory": "packages/core" },
