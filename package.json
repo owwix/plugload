@@ -12,6 +12,7 @@
       "@hono/node-server": "2.1.0",
       "@modelcontextprotocol/sdk": "1.30.0",
       "@payloadcms/plugin-mcp": "3.87.1",
+      "@esbuild-kit/core-utils>esbuild": "0.25.12",
       "dompurify": "3.4.13",
       "payload": "3.87.1"
     }
