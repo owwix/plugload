@@ -1,0 +1,33 @@
+{
+  "name": "@plugload/example-payload-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "generate:types": "payload generate:types",
+    "generate:importmap": "payload generate:importmap",
+    "seed": "payload run scripts/seed.ts"
+  },
+  "dependencies": {
+    "@payloadcms/db-sqlite": "3.84.1",
+    "@payloadcms/next": "3.84.1",
+    "@payloadcms/plugin-mcp": "3.84.1",
+    "@payloadcms/richtext-lexical": "3.84.1",
+    "@plugload/mcp": "workspace:*",
+    "graphql": "16.11.0",
+    "next": "15.4.11",
+    "payload": "3.84.1",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "sharp": "0.34.3"
+  },
+  "devDependencies": {
+    "@types/node": "22.17.1",
+    "@types/react": "19.1.9",
+    "@types/react-dom": "19.1.7",
+    "typescript": "5.9.2"
+  }
+}

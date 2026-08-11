@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "plugload": {
+      "command": "node",
+      "args": ["./packages/mcp/dist/stdio.js"],
+      "env": {
+        "PLUGLOAD_CONFIG": "./plugload.config.json"
+      }
+    }
+  }
+}

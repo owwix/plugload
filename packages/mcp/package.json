@@ -1,0 +1,30 @@
+{
+  "name": "@plugload/mcp",
+  "version": "0.1.0",
+  "description": "Safe content operations adapter for Payload CMS's official MCP plugin",
+  "license": "Apache-2.0",
+  "repository": { "type": "git", "url": "https://github.com/owwix/plugload.git", "directory": "packages/mcp" },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": { "plugload-mcp": "./dist/stdio.js" },
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.26.0",
+    "@plugload/core": "workspace:*",
+    "zod": "3.25.76"
+  },
+  "peerDependencies": {
+    "@payloadcms/plugin-mcp": ">=3.83.0 <5",
+    "payload": ">=3.83.0 <5"
+  },
+  "peerDependenciesMeta": {
+    "@payloadcms/plugin-mcp": { "optional": true },
+    "payload": { "optional": true }
+  }
+}

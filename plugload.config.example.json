@@ -1,0 +1,17 @@
+{
+  "projects": [
+    {
+      "name": "agency-site-local",
+      "url": "http://127.0.0.1:3000/api/mcp",
+      "environment": "development",
+      "tokenEnv": "PAYLOAD_LOCAL_MCP_TOKEN",
+      "default": true
+    },
+    {
+      "name": "agency-site-production",
+      "url": "https://cms.example.com/api/mcp",
+      "environment": "production",
+      "tokenEnv": "PAYLOAD_PRODUCTION_MCP_TOKEN"
+    }
+  ]
+}

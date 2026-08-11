@@ -1,0 +1,14 @@
+{
+  "action": "update",
+  "target": {
+    "kind": "collection",
+    "slug": "posts",
+    "id": "1",
+    "locale": "en"
+  },
+  "data": {
+    "title": "A safer headline"
+  },
+  "reason": "Correct the campaign headline before editorial review",
+  "actor": "cli-user"
+}

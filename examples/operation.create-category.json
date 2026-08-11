@@ -1,0 +1,13 @@
+{
+  "action": "create",
+  "target": {
+    "kind": "collection",
+    "slug": "categories"
+  },
+  "data": {
+    "name": "Plugload local verification",
+    "description": "Created through a previewed Plugload operation."
+  },
+  "reason": "Verify the local plan, apply, and audit workflow",
+  "actor": "local-setup"
+}

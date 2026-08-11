@@ -1,0 +1,16 @@
+node_modules
+dist
+.next
+.DS_Store
+coverage
+*.tsbuildinfo
+.env
+.env.local
+*.db
+*.db-shm
+*.db-wal
+audit.jsonl
+plugload.config.json
+payload-types.ts
+.local-mcp-token
+.local-admin.json

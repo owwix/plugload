@@ -1,0 +1,31 @@
+{
+  "name": "plugload",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "repository": { "type": "git", "url": "https://github.com/owwix/plugload.git" },
+  "type": "module",
+  "packageManager": "pnpm@10.33.1",
+  "engines": { "node": ">=20.9.0" },
+  "pnpm": {
+    "overrides": {
+      "@modelcontextprotocol/sdk": "1.26.0"
+    }
+  },
+  "scripts": {
+    "build": "pnpm -r --filter './packages/**' build",
+    "typecheck": "pnpm --filter @plugload/core build && pnpm --filter @plugload/mcp build && pnpm -r --filter './packages/**' typecheck",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "plugload": "node packages/cli/dist/index.js"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.32.0",
+    "@types/node": "22.17.1",
+    "eslint": "9.32.0",
+    "typescript": "5.9.2",
+    "typescript-eslint": "8.39.0",
+    "vitest": "3.2.4"
+  }
+}

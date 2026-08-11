@@ -1,0 +1,25 @@
+{
+  "name": "plugload",
+  "version": "0.1.0",
+  "description": "Safe, schema-aware content operations for Payload CMS agents.",
+  "author": {
+    "name": "Plugload contributors"
+  },
+  "license": "MIT",
+  "keywords": ["payload", "cms", "mcp", "content-operations", "codex"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Plugload",
+    "shortDescription": "Safely operate Payload CMS content.",
+    "longDescription": "Schema-aware Payload CMS reads, previews, approvals, publishing workflows, rollback, promotion, and auditable agent actions.",
+    "developerName": "Plugload contributors",
+    "category": "Developer Tools",
+    "capabilities": ["Read", "Write"],
+    "defaultPrompt": [
+      "Inspect my Payload schema and access boundaries.",
+      "Preview a safe content update before applying it.",
+      "Prepare a draft for review without publishing it."
+    ]
+  }
+}

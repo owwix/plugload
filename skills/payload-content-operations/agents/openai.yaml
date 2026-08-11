@@ -1,0 +1,4 @@
+interface:
+  display_name: "Payload Content Operations"
+  short_description: "Safely preview and operate Payload content"
+  default_prompt: "Use $payload-content-operations to inspect my Payload schema and safely preview a content update."
