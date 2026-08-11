@@ -1,6 +1,6 @@
 {
   "name": "@plugload/cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CLI for safe Payload CMS content operations through Plugload",
   "license": "Apache-2.0",
   "repository": { "type": "git", "url": "https://github.com/owwix/plugload.git", "directory": "packages/cli" },
