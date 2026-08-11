@@ -7,7 +7,7 @@ const [, , command, subcommand, ...rest] = process.argv
 const flags = parseFlags(rest)
 
 async function main() {
-  if (!command || command === 'help' || flags.help) return printHelp()
+  if (!command || command === 'help' || command === '--help' || command === '-h' || flags.help) return printHelp()
   const configPath = typeof flags.config === 'string' ? flags.config : undefined
   const config = await loadConfig(configPath)
 
