@@ -1,0 +1,4 @@
+interface:
+  display_name: "Payload Project Onboarding"
+  short_description: "Connect Payload projects safely to Plugload"
+  default_prompt: "Use $payload-project-onboarding to connect and validate my Payload CMS project with Plugload."
