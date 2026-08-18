@@ -26,11 +26,11 @@
     "plugload": "node packages/cli/dist/index.js"
   },
   "devDependencies": {
-    "@eslint/js": "9.32.0",
+    "@eslint/js": "10.0.1",
     "@types/node": "22.17.1",
-    "eslint": "9.32.0",
+    "eslint": "10.8.1",
     "typescript": "5.9.2",
-    "typescript-eslint": "8.39.0",
+    "typescript-eslint": "8.67.0",
     "vitest": "4.1.10"
   }
 }
